@@ -1,7 +1,7 @@
 'use strict';
 
 // ── Set this after deploying your Google Apps Script Web App ──
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBAXYj2TjnwAFUz9DYTW9adZy2yUtV8w0l0DvMCqcNi17MFKwlQFZQ21vPEe_penEN/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmPSx-YGgbYOz-XGwZGs7yA0Hh-36c9_cv7H-2O-OeQlQU2PY5a8O3SHlphdwRBrRo/exec';
 // ─────────────────────────────────────────────────────────────
 
 let currentStep = 1;
