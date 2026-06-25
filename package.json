@@ -1,0 +1,12 @@
+{
+  "name": "exit-feedback-form",
+  "version": "1.0.0",
+  "description": "The most dramatic exit form in corporate history",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaibhav's Exit Feedback | Leave Your Mark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="page-wrapper">
+    <div class="form-container">
+
+      <!-- Header -->
+      <div class="form-header">
+        <div class="classified-badge">🎖️ OFFICIAL TRIBUTE DOCUMENT #001</div>
+        <h1>Vaibhav Is <span class="highlight">Actually</span> Leaving.</h1>
+        <p class="subtitle">He's gone. He can't see this. Be honest.<br><small style="opacity:0.6">(He will definitely read this later.)</small></p>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrapper">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-milestones">
+          <span class="milestone" data-step="1">Who<br>Are You?</span>
+          <span class="milestone" data-step="2">The<br>Debrief</span>
+          <span class="milestone" data-step="3">The<br>Legend</span>
+          <span class="milestone" data-step="4">The<br>Ledger</span>
+          <span class="milestone" data-step="5">Your<br>Message</span>
+          <span class="milestone" data-step="6">🎉<br>DONE</span>
+        </div>
+      </div>
+
+      <div class="steps-container">
+
+        <!-- ── STEP 1: The Witness Statement ── -->
+        <div class="step active" id="step-1">
+          <div class="step-intro">
+            <span class="step-emoji">🕵️</span>
+            <h2>The Witness Statement</h2>
+            <p>Before you testify, tell us who you are. Anonymous responses are totally fine — just pick a pseudonym that gives nothing away. Like "Definitely Not Sarah."</p>
+          </div>
+
+          <div class="form-fields">
+            <div class="field-group">
+              <label for="respondent_name">Your name <span class="label-hint">(or a convincing alias)</span></label>
+              <input type="text" id="respondent_name" placeholder="e.g. A Concerned Colleague, Definitely Not Sarah, Your Biggest Fan">
+            </div>
+
+            <div class="field-group">
+              <label for="relationship">How did you work with Vaibhav? <span class="label-hint">(required)</span></label>
+              <select id="relationship">
+                <option value="">Choose your relationship to the legend...</option>
+                <option value="Direct teammate">🤝 Direct teammate — same squad, same suffering</option>
+                <option value="Manager or skip-level">👔 Manager or skip-level — I was responsible for him (or tried to be)</option>
+                <option value="He managed me">🫡 He managed me — I reported to this man</option>
+                <option value="Cross-functional collaborator">🔀 Cross-functional collaborator — we synced so we could sync later</option>
+                <option value="Adjacent team observer">👀 Adjacent team — I watched from a respectful distance</option>
+                <option value="Coffee / complaints partner">☕ We mostly met at the coffee machine and complained together</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label>How long did you work together?</label>
+              <div class="radio-grid four-col">
+                <label class="radio-card-label">
+                  <input type="radio" name="worked_together" value="Under 6 months">
+                  <div class="radio-card">
+                    <span class="card-emoji">🌱</span>
+                    <span class="card-title">Under 6 months</span>
+                    <span class="card-sub">A brief but memorable era</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="worked_together" value="6–12 months">
+                  <div class="radio-card">
+                    <span class="card-emoji">🌿</span>
+                    <span class="card-title">6–12 months</span>
+                    <span class="card-sub">Long enough to form real opinions</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="worked_together" value="1–3 years">
+                  <div class="radio-card">
+                    <span class="card-emoji">🌳</span>
+                    <span class="card-title">1–3 years</span>
+                    <span class="card-sub">A certified Vaibhav veteran</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="worked_together" value="3+ years">
+                  <div class="radio-card">
+                    <span class="card-emoji">🦕</span>
+                    <span class="card-title">3+ years</span>
+                    <span class="card-sub">You basically co-authored each other</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions single">
+            <button class="btn-next" onclick="nextStep(1)">Let's do this →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 2: The Debrief ── -->
+        <div class="step" id="step-2">
+          <div class="step-intro">
+            <span class="step-emoji">🧠</span>
+            <h2>The Debrief</h2>
+            <p>Now that you've been sworn in, let's talk about the actual Vaibhav experience. Think carefully. No take-backs.</p>
+          </div>
+
+          <div class="form-fields">
+            <div class="field-group">
+              <label>Which best describes Vaibhav's working style?</label>
+              <div class="option-grid">
+                <label class="option-card-label">
+                  <input type="radio" name="working_style" value="Showed up with solutions, not just problems">
+                  <div class="option-card">
+                    <span class="option-emoji">🎯</span>
+                    <span class="option-title">Showed up with solutions, not just problems</span>
+                    <span class="option-sub">Rare and valuable. A gift, really.</span>
+                  </div>
+                </label>
+                <label class="option-card-label">
+                  <input type="radio" name="working_style" value="Asked 'why are we doing this?' in the best way">
+                  <div class="option-card">
+                    <span class="option-emoji">🤔</span>
+                    <span class="option-title">Asked "why are we doing this?" (in the best way)</span>
+                    <span class="option-sub">The question everyone needed but feared asking.</span>
+                  </div>
+                </label>
+                <label class="option-card-label">
+                  <input type="radio" name="working_style" value="Got things done without making noise about it">
+                  <div class="option-card">
+                    <span class="option-emoji">🤫</span>
+                    <span class="option-title">Got things done without making noise about it</span>
+                    <span class="option-sub">Quiet execution. The best kind.</span>
+                  </div>
+                </label>
+                <label class="option-card-label">
+                  <input type="radio" name="working_style" value="Made meetings feel like they were actually worth it">
+                  <div class="option-card">
+                    <span class="option-emoji">✨</span>
+                    <span class="option-title">Made meetings feel like they were actually worth it</span>
+                    <span class="option-sub">A genuinely rare human ability.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>How would you describe his responsiveness?</label>
+              <div class="radio-grid four-col">
+                <label class="radio-card-label">
+                  <input type="radio" name="responsiveness" value="Replied instantly (slightly unsettling)">
+                  <div class="radio-card">
+                    <span class="card-emoji">⚡</span>
+                    <span class="card-title">Instantly</span>
+                    <span class="card-sub">Slightly unsettling, honestly</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="responsiveness" value="Replied in reasonable time (model citizen)">
+                  <div class="radio-card">
+                    <span class="card-emoji">🙌</span>
+                    <span class="card-title">Reasonable time</span>
+                    <span class="card-sub">A model citizen. Respect.</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="responsiveness" value="Replied eventually (a man of mystery)">
+                  <div class="radio-card">
+                    <span class="card-emoji">🎩</span>
+                    <span class="card-title">Eventually</span>
+                    <span class="card-sub">A man of mystery. We respect it.</span>
+                  </div>
+                </label>
+                <label class="radio-card-label">
+                  <input type="radio" name="responsiveness" value="Left me on read (we don't talk about it)">
+                  <div class="radio-card">
+                    <span class="card-emoji">👀</span>
+                    <span class="card-title">Left on read</span>
+                    <span class="card-sub">We don't talk about it.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>Rate his energy / vibe in meetings</label>
+              <div class="emoji-rating" id="vibe-rating">
+                <button type="button" class="emoji-btn" data-value="1" title="Checked out">😴</button>
+                <button type="button" class="emoji-btn" data-value="2" title="Present">😐</button>
+                <button type="button" class="emoji-btn" data-value="3" title="Engaged">🙂</button>
+                <button type="button" class="emoji-btn" data-value="4" title="Running it">🔥</button>
+                <button type="button" class="emoji-btn" data-value="5" title="Carries the whole thing">🚀</button>
+              </div>
+              <div class="emoji-rating-label" id="vibe-label">← Click to rate</div>
+              <input type="hidden" id="vibe-value" value="">
+            </div>
+
+            <div class="field-group">
+              <label>How much did working with Vaibhav make <em>your</em> work easier?</label>
+              <div class="slider-container">
+                <div class="slider-labels">
+                  <span>He was a blocker 😅</span>
+                  <span>My secret weapon 🏆</span>
+                </div>
+                <input type="range" id="impact_score" min="1" max="10" value="7" class="styled-slider">
+                <div class="slider-value-display">
+                  <span class="slider-number" id="impact-number">7</span>
+                  <span class="slider-reaction" id="impact-reaction">A genuine force-multiplier. The good kind of colleague. ✨</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-back" onclick="prevStep(2)">← Back</button>
+            <button class="btn-next" onclick="nextStep(2)">Next →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 3: The Legend ── -->
+        <div class="step" id="step-3">
+          <div class="step-intro">
+            <span class="step-emoji">🏆</span>
+            <h2>The Legend</h2>
+            <p>Every person has their thing. Their essence. Their <em>Vaibhav-ness.</em> Let's put it on the record.</p>
+          </div>
+
+          <div class="form-fields">
+            <div class="field-group">
+              <label>Which of these describe Vaibhav? <span class="label-hint">(check all that apply)</span></label>
+              <div class="checkbox-grid">
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who asked the question everyone was afraid to ask">
+                  <div class="checkbox-content"><span>🤔</span><span>The one who asked the question everyone was afraid to ask</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who somehow knew everything about everything">
+                  <div class="checkbox-content"><span>📚</span><span>The one who somehow knew everything about everything</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who could cut through confusion in one sentence">
+                  <div class="checkbox-content"><span>🎯</span><span>The one who could cut through confusion in one sentence</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who made a tough week survivable">
+                  <div class="checkbox-content"><span>😂</span><span>The one who made a tough week survivable</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who connected dots nobody else saw">
+                  <div class="checkbox-content"><span>🧩</span><span>The one who connected dots nobody else saw</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who had your back when it actually counted">
+                  <div class="checkbox-content"><span>🛡️</span><span>The one who had your back when it actually counted</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who stayed calm when everything was on fire">
+                  <div class="checkbox-content"><span>🧘</span><span>The one who stayed calm when everything was on fire</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who moved faster than everyone else">
+                  <div class="checkbox-content"><span>⚡</span><span>The one who moved faster than everyone else</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who gave credit to the team, always">
+                  <div class="checkbox-content"><span>🙌</span><span>The one who gave credit to the team, always</span></div>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="archetypes" value="The one who remembered everyone's context and followed up">
+                  <div class="checkbox-content"><span>🧠</span><span>The one who remembered everyone's context and followed up</span></div>
+                </label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="vaibhav_moment">What's the most <em>Vaibhav</em> thing Vaibhav ever did? <span class="label-hint">(optional, but please)</span></label>
+              <textarea id="vaibhav_moment" rows="3" placeholder="E.g., 'He once rewrote an entire presentation at 11pm because the slides felt off. Nobody asked him to. He just cared.'"></textarea>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-back" onclick="prevStep(3)">← Back</button>
+            <button class="btn-next" onclick="nextStep(3)">Next →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 4: The Ledger ── -->
+        <div class="step" id="step-4">
+          <div class="step-intro">
+            <span class="step-emoji">⚖️</span>
+            <h2>The Ledger</h2>
+            <p>An honest accounting. What will you miss? What should he work on in the next chapter? Both matter. Both are welcome here.</p>
+          </div>
+
+          <div class="ledger-score-bar">
+            <span id="ledger-score">Select items below and watch the verdict appear...</span>
+          </div>
+
+          <div class="form-fields ledger-layout">
+            <div class="ledger-column">
+              <div class="ledger-header miss-header">💙 Things You'll Miss</div>
+              <div class="checkbox-list">
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="Having a sounding board who actually listened">
+                  <span class="check-icon">✓</span>
+                  <span>🎧 Having a sounding board who actually listened</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="The calm he brought when things went sideways">
+                  <span class="check-icon">✓</span>
+                  <span>🧘 The calm he brought when things went sideways</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="Saying 'ask Vaibhav' and knowing it would be handled">
+                  <span class="check-icon">✓</span>
+                  <span>✅ Saying "ask Vaibhav" and knowing it would get done</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="His ability to make complexity feel manageable">
+                  <span class="check-icon">✓</span>
+                  <span>🧩 His ability to make complexity feel manageable</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="The Slack message you didn't know you needed">
+                  <span class="check-icon">✓</span>
+                  <span>💬 The Slack message you didn't know you needed</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="The way he pushed back thoughtfully when something felt wrong">
+                  <span class="check-icon">✓</span>
+                  <span>🤝 The way he pushed back thoughtfully when something felt wrong</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="His reliability — it would get done and get done well">
+                  <span class="check-icon">✓</span>
+                  <span>🏆 His reliability — it would get done, and done well</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="Having someone who genuinely cared about the work">
+                  <span class="check-icon">✓</span>
+                  <span>❤️ Having someone who genuinely cared about the work</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="The energy he brought on the bad days">
+                  <span class="check-icon">✓</span>
+                  <span>⚡ The energy he brought on the bad days</span>
+                </label>
+                <label class="checkbox-item miss-item">
+                  <input type="checkbox" name="will_miss" value="The general Vaibhav-shaped hole he's leaving behind">
+                  <span class="check-icon">✓</span>
+                  <span>🕳️ The general Vaibhav-shaped hole he's leaving behind</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="ledger-divider">⚖️</div>
+
+            <div class="ledger-column">
+              <div class="ledger-header wont-miss-header">📝 Honest Feedback for the Next Chapter</div>
+              <div class="checkbox-list">
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Could have asked for help sooner instead of going solo">
+                  <span class="check-icon">✓</span>
+                  <span>🙋 Could've asked for help sooner instead of going solo</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Took on too much without delegating enough">
+                  <span class="check-icon">✓</span>
+                  <span>📦 Took on too much without delegating enough</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Sometimes too diplomatic when directness would have been faster">
+                  <span class="check-icon">✓</span>
+                  <span>🎭 Sometimes too diplomatic when bluntness was needed</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Could have promoted his own work more loudly">
+                  <span class="check-icon">✓</span>
+                  <span>📣 Could have promoted his own work more loudly</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Held himself to a higher standard than he held others (unfair to himself)">
+                  <span class="check-icon">✓</span>
+                  <span>🔍 Held himself to a higher standard than others (unfair to himself)</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Overthought decisions that probably didn't need it">
+                  <span class="check-icon">✓</span>
+                  <span>💭 Overthought decisions that didn't need it</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Could be more comfortable saying no">
+                  <span class="check-icon">✓</span>
+                  <span>🙅 Could be more comfortable saying no</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Sometimes moved so fast it was hard to follow">
+                  <span class="check-icon">✓</span>
+                  <span>💨 Sometimes moved so fast it was hard to follow</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Needs to get better at celebrating his own wins">
+                  <span class="check-icon">✓</span>
+                  <span>🎉 Needs to get better at celebrating his own wins</span>
+                </label>
+                <label class="checkbox-item wont-miss-item">
+                  <input type="checkbox" name="wont_miss" value="Should've spoken up more in rooms that mattered">
+                  <span class="check-icon">✓</span>
+                  <span>🎤 Should've spoken up more in rooms that mattered</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-back" onclick="prevStep(4)">← Back</button>
+            <button class="btn-next" onclick="nextStep(4)">Next →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 5: Your Message ── -->
+        <div class="step" id="step-5">
+          <div class="step-intro">
+            <span class="step-emoji">✉️</span>
+            <h2>Your Message to Vaibhav</h2>
+            <p>Your final words. He will definitely read these. Probably more than once.<br><small style="opacity:0.6">(Definitely more than once.)</small></p>
+          </div>
+
+          <div class="form-fields">
+            <div class="field-group">
+              <label for="farewell_message">What do you want to say to Vaibhav?</label>
+              <div class="textarea-wrapper">
+                <textarea id="farewell_message" rows="6" placeholder="E.g., 'Working with you raised the bar for what I thought a great colleague looked like. Take that with you.'"></textarea>
+                <div class="textarea-tools">
+                  <button type="button" class="generate-btn corporate-btn" onclick="generateFarewell('sweet')">
+                    💌 Generate the Sweet Version
+                  </button>
+                  <button type="button" class="generate-btn honest-btn" onclick="generateFarewell('roast')">
+                    🔥 Generate the Roast Version
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label>If you could, would you work with Vaibhav again?</label>
+              <div class="slider-container">
+                <div class="slider-labels">
+                  <span>Hard pass 😬</span>
+                  <span>Sign me up immediately 🙋</span>
+                </div>
+                <input type="range" id="rehire_score" min="1" max="10" value="8" class="styled-slider">
+                <div class="slider-value-display">
+                  <span class="slider-number" id="rehire-number">8</span>
+                  <span class="slider-reaction" id="rehire-reaction">A definite yes. Vaibhav is reading this and smiling. 😊</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="one_word">One word to describe Vaibhav <span class="label-hint">(just one, make it count)</span></label>
+              <input type="text" id="one_word" placeholder="E.g., Reliable. Curious. Unstoppable. Chaotic.">
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn-back" onclick="prevStep(5)">← Back</button>
+            <button class="btn-submit" onclick="submitForm()">📬 Send My Tribute</button>
+          </div>
+        </div>
+
+        <!-- ── STEP COMPLETE ── -->
+        <div class="step" id="step-complete">
+          <div class="completion-screen">
+            <div class="stamp">TRIBUTE<br>RECEIVED</div>
+            <div class="completion-emoji">💜</div>
+            <h2>Vaibhav Thanks You.</h2>
+            <p class="completion-subtitle">Your tribute has been logged. He will read this later in a coffee shop, slightly emotional, trying not to show it.</p>
+
+            <div class="legacy-card">
+              <h3>📜 Your Tribute Summary</h3>
+              <div id="legacy-content"></div>
+            </div>
+
+            <div class="completion-footer">
+              <p>The best kind of colleague is the one who makes you better without trying to.<br>Vaibhav was that. You just said so.</p>
+              <p class="small">Your response has been saved. He'll probably screenshot the good parts.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /steps-container -->
+    </div><!-- /form-container -->
+  </div><!-- /page-wrapper -->
+
+  <script src="script.js"></script>
+</body>
+</html>

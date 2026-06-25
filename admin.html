@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Vaibhav's Tribute Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --purple: #7c3aed; --purple-light: #ede9fe; --purple-dark: #5b21b6;
+      --green: #10b981; --blue: #3b82f6; --amber: #f59e0b; --red: #ef4444;
+      --bg: #f5f3ff; --card: #fff; --border: #e5e7eb;
+      --text: #1f2937; --muted: #6b7280; --r: 12px;
+    }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Password Screen ── */
+    #password-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .lock-card {
+      background: var(--card); border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      padding: 3rem 2.5rem; width: 100%; max-width: 400px; text-align: center;
+    }
+    .lock-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .lock-card h1 { font-size: 1.5rem; font-weight: 800; color: var(--purple-dark); margin-bottom: 0.25rem; }
+    .lock-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
+    .lock-card input {
+      width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--border);
+      border-radius: var(--r); font-family: inherit; font-size: 0.95rem;
+      margin-bottom: 0.75rem; outline: none; transition: all 0.2s;
+    }
+    .lock-card input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+    .lock-card input.shake { animation: shake 0.35s ease; border-color: var(--red); }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
+    }
+    .lock-btn {
+      width: 100%; padding: 0.85rem; background: linear-gradient(135deg, var(--purple), #8b5cf6);
+      color: #fff; border: none; border-radius: var(--r); font-family: inherit;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .lock-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(124,58,237,0.4); }
+    .lock-error { color: var(--red); font-size: 0.8rem; margin-top: 0.6rem; min-height: 1.2em; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; }
+    .dash-header {
+      background: linear-gradient(135deg, #4c1d95, var(--purple));
+      color: #fff; padding: 1.25rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .dash-header h1 { font-size: 1.1rem; font-weight: 800; }
+    .dash-header p  { font-size: 0.8rem; opacity: 0.75; margin-top: 0.15rem; }
+    .dash-actions { display: flex; gap: 0.5rem; }
+    .btn-sm {
+      padding: 0.45rem 1rem; border-radius: 8px; font-family: inherit; font-size: 0.8rem;
+      font-weight: 600; cursor: pointer; border: 2px solid rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.12); color: #fff; transition: all 0.2s;
+    }
+    .btn-sm:hover { background: rgba(255,255,255,0.25); }
+
+    .stats-bar {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; gap: 2.5rem; flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; gap: 0.15rem; }
+    .stat-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-size: 1.4rem; font-weight: 900; color: var(--purple-dark); }
+
+    .dash-body { padding: 1.5rem 2rem; }
+
+    .spinner-wrap { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
+    .spinner {
+      width: 32px; height: 32px; border: 3px solid var(--border);
+      border-top-color: var(--purple); border-radius: 50%;
+      animation: spin 0.7s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
+    .empty-state .e-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    .responses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; }
+
+    /* ── Response Card ── */
+    .response-card {
+      background: var(--card); border-radius: var(--r); border: 1px solid var(--border);
+      overflow: hidden; transition: box-shadow 0.2s;
+    }
+    .response-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+
+    .card-header {
+      background: linear-gradient(135deg, #f5f3ff, #fdf4ff);
+      padding: 0.9rem 1rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .card-name { font-weight: 800; font-size: 0.95rem; color: var(--purple-dark); }
+    .card-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .card-time { font-size: 0.7rem; color: var(--muted); white-space: nowrap; padding-top: 2px; }
+
+    .card-body { padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.65rem; }
+
+    .field-row { display: flex; flex-direction: column; gap: 0.15rem; }
+    .field-label { font-size: 0.67rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .field-value { font-size: 0.82rem; color: var(--text); line-height: 1.45; }
+
+    .one-word {
+      display: inline-block; background: var(--purple-light); color: var(--purple-dark);
+      font-weight: 800; font-size: 0.9rem; padding: 0.2rem 0.8rem;
+      border-radius: 99px; letter-spacing: 0.02em;
+    }
+
+    .rehire-wrap { display: flex; align-items: center; gap: 0.6rem; }
+    .rehire-track { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .rehire-fill  { height: 100%; background: linear-gradient(90deg, var(--purple), var(--green)); border-radius: 99px; }
+    .rehire-num   { font-size: 0.78rem; font-weight: 800; color: var(--purple-dark); min-width: 2.5ch; }
+
+    .farewell-preview {
+      background: var(--purple-light); border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0; padding: 0.5rem 0.75rem;
+      font-size: 0.79rem; font-style: italic; color: var(--purple-dark); line-height: 1.5;
+    }
+
+    .expand-btn {
+      background: none; border: none; color: var(--purple); font-family: inherit;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 0; text-align: left;
+    }
+    .expand-btn:hover { color: var(--purple-dark); text-decoration: underline; }
+
+    .expanded { display: none; border-top: 1px solid var(--border); padding: 0.9rem 1rem; flex-direction: column; gap: 0.75rem; }
+    .expanded.open { display: flex; }
+
+    .tags-wrap { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .tag { background: #f3f4f6; color: var(--text); font-size: 0.68rem; font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 6px; }
+
+    .list-items { display: flex; flex-direction: column; gap: 0.3rem; }
+    .miss-item     { font-size: 0.78rem; color: #1e40af; background: #eff6ff; padding: 0.3rem 0.5rem; border-radius: 6px; }
+    .feedback-item { font-size: 0.78rem; color: #991b1b; background: #fef2f2; padding: 0.3rem 0.5rem; border-radius: 6px; }
+
+    .full-msg {
+      background: #f9fafb; border-radius: 8px; padding: 0.75rem;
+      font-size: 0.8rem; line-height: 1.7; white-space: pre-wrap; color: var(--text);
+    }
+
+    @media (max-width: 640px) {
+      .dash-header, .dash-body, .stats-bar { padding: 1rem; }
+      .responses-grid { grid-template-columns: 1fr; }
+      .stats-bar { gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Password Screen ── -->
+  <div id="password-screen">
+    <div class="lock-card">
+      <div class="lock-icon">🔐</div>
+      <h1>Tribute Dashboard</h1>
+      <p>Vaibhav's exit feedback — private view.</p>
+      <input type="password" id="pwd-input" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter') checkPassword()">
+      <button class="lock-btn" onclick="checkPassword()">Enter Dashboard →</button>
+      <p class="lock-error" id="pwd-error"></p>
+    </div>
+  </div>
+
+  <!-- ── Dashboard ── -->
+  <div id="dashboard">
+    <div class="dash-header">
+      <div>
+        <h1>🎖️ Vaibhav's Tribute Dashboard</h1>
+        <p id="dash-sub">Loading…</p>
+      </div>
+      <div class="dash-actions">
+        <button class="btn-sm" onclick="loadResponses()">↻ Refresh</button>
+        <button class="btn-sm" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="stats-bar" id="stats-bar"></div>
+    <div class="dash-body" id="dash-body">
+      <div class="spinner-wrap"><div class="spinner"></div>Fetching tributes…</div>
+    </div>
+  </div>
+
+  <script>
+    // ── CONFIG — update both values ───────────────────────────────
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBAXYj2TjnwAFUz9DYTW9adZy2yUtV8w0l0DvMCqcNi17MFKwlQFZQ21vPEe_penEN/exec';
+    const ADMIN_PASSWORD  = 'vaibhavrocks';
+    // ─────────────────────────────────────────────────────────────
+
+    const VIBE = { '1':'😴 1/5', '2':'😐 2/5', '3':'🙂 3/5', '4':'🔥 4/5', '5':'🚀 5/5' };
+
+    function checkPassword() {
+      const input = document.getElementById('pwd-input');
+      const errEl = document.getElementById('pwd-error');
+      if (input.value === ADMIN_PASSWORD) {
+        document.getElementById('password-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadResponses();
+      } else {
+        errEl.textContent = 'Wrong password. Try again.';
+        input.classList.add('shake');
+        input.addEventListener('animationend', () => input.classList.remove('shake'), { once: true });
+      }
+    }
+
+    function logout() {
+      document.getElementById('password-screen').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('pwd-input').value = '';
+      document.getElementById('pwd-error').textContent = '';
+    }
+
+    async function loadResponses() {
+      document.getElementById('dash-body').innerHTML =
+        '<div class="spinner-wrap"><div class="spinner"></div>Fetching tributes…</div>';
+      try {
+        const res  = await fetch(APPS_SCRIPT_URL);
+        const rows = await res.json();
+        render(Array.isArray(rows) ? rows : []);
+      } catch (err) {
+        document.getElementById('dash-body').innerHTML =
+          `<div class="empty-state"><div class="e-icon">⚠️</div>
+           <p>Could not load responses.</p>
+           <p style="font-size:0.8rem;margin-top:0.5rem;opacity:0.6">Check that your Apps Script URL is correct and the web app is deployed with "Anyone" access.</p>
+           <p style="font-size:0.75rem;margin-top:0.4rem;opacity:0.5">${esc(err.message)}</p></div>`;
+      }
+    }
+
+    function render(rows) {
+      const statsEl = document.getElementById('stats-bar');
+      const bodyEl  = document.getElementById('dash-body');
+      const subEl   = document.getElementById('dash-sub');
+
+      if (!rows.length) {
+        subEl.textContent = 'No responses yet.';
+        statsEl.innerHTML = '';
+        bodyEl.innerHTML  =
+          '<div class="empty-state"><div class="e-icon">📭</div><p>No tributes yet. Share the form with your colleagues!</p></div>';
+        return;
+      }
+
+      const total        = rows.length;
+      const rehireScores = rows.map(r => parseFloat(r['Rehire Score'] || r.rehire_score)).filter(n => !isNaN(n));
+      const avgRehire    = rehireScores.length
+        ? (rehireScores.reduce((a,b) => a+b, 0) / rehireScores.length).toFixed(1) : '—';
+      const words        = rows.map(r => (r['One Word'] || r.one_word || '').trim()).filter(Boolean);
+
+      subEl.textContent = `${total} response${total !== 1 ? 's' : ''} received`;
+      statsEl.innerHTML = `
+        <div class="stat"><span class="stat-label">Total Tributes</span><span class="stat-value">${total}</span></div>
+        <div class="stat"><span class="stat-label">Avg "Work Again" Score</span><span class="stat-value">${avgRehire} / 10</span></div>
+        ${words.length ? `<div class="stat"><span class="stat-label">Words for Vaibhav</span>
+          <span class="stat-value" style="font-size:0.9rem">${words.slice(0,5).map(w => `"${esc(w)}"`).join(' · ')}</span></div>` : ''}
+      `;
+
+      bodyEl.innerHTML = `<div class="responses-grid">${[...rows].reverse().map(buildCard).join('')}</div>`;
+
+      document.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sec  = btn.nextElementSibling;
+          const open = sec.classList.toggle('open');
+          btn.textContent = open ? '▲ Show less' : '▼ See full feedback';
+        });
+      });
+    }
+
+    function buildCard(r) {
+      const name      = r['Name']            || r.respondent_name   || 'Anonymous';
+      const rel       = r['Relationship']    || r.relationship      || '';
+      const duration  = r['Worked Together'] || r.worked_together   || '';
+      const style     = r['Working Style']   || r.working_style     || '';
+      const resp      = r['Responsiveness']  || r.responsiveness    || '';
+      const vibe      = r['Meeting Vibe']    || r.meeting_vibe      || '';
+      const impact    = r['Impact Score']    || r.impact_score      || '';
+      const rehire    = parseFloat(r['Rehire Score'] || r.rehire_score) || 0;
+      const oneWord   = r['One Word']        || r.one_word          || '';
+      const farewell  = r['Farewell Message']|| r.farewell_message  || '';
+      const moment    = r['Vaibhav Moment']  || r.vaibhav_moment    || '';
+      const missRaw   = r['Things Will Miss']|| r.things_will_miss  || '';
+      const feedRaw   = r['Honest Feedback'] || r.honest_feedback   || '';
+      const arcRaw    = r['Archetypes']      || r.archetypes        || '';
+      const ts        = r['Timestamp']       || r.timestamp         || '';
+
+      const split     = s => typeof s === 'string' ? s.split('|').map(x=>x.trim()).filter(Boolean)
+                                                   : (Array.isArray(s) ? s : []);
+      const missList  = split(missRaw);
+      const feedList  = split(feedRaw);
+      const arcList   = split(arcRaw);
+
+      const timeStr   = ts ? new Date(ts).toLocaleDateString('en-US',
+        { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+      const preview   = farewell ? (farewell.split('\n').find(l => l.trim()) ?? '') : '';
+
+      return `
+        <div class="response-card">
+          <div class="card-header">
+            <div>
+              <div class="card-name">👤 ${esc(name)}</div>
+              <div class="card-meta">${esc(rel)}${duration ? ' · ' + esc(duration) : ''}</div>
+            </div>
+            <span class="card-time">${timeStr}</span>
+          </div>
+
+          <div class="card-body">
+            ${row('Working Style',   style)}
+            ${row('Responsiveness',  resp)}
+            ${vibe   ? `<div class="field-row"><span class="field-label">Meeting Vibe</span><span class="field-value">${VIBE[vibe] || vibe + '/5'}</span></div>` : ''}
+            ${impact ? `<div class="field-row"><span class="field-label">Made Your Work Easier</span><span class="field-value">${esc(impact)} / 10</span></div>` : ''}
+            ${rehire ? `
+              <div class="field-row">
+                <span class="field-label">Would Work With Again</span>
+                <div class="rehire-wrap">
+                  <div class="rehire-track"><div class="rehire-fill" style="width:${rehire*10}%"></div></div>
+                  <span class="rehire-num">${rehire}/10</span>
+                </div>
+              </div>` : ''}
+            ${oneWord ? `<div class="field-row"><span class="field-label">One Word</span><span class="one-word">${esc(oneWord)}</span></div>` : ''}
+            ${preview ? `<div class="farewell-preview">"${esc(preview)}…"</div>` : ''}
+            <button class="expand-btn">▼ See full feedback</button>
+            <div class="expanded">
+              ${arcList.length ? `
+                <div class="field-row">
+                  <span class="field-label">Archetypes (${arcList.length})</span>
+                  <div class="tags-wrap">${arcList.map(a=>`<span class="tag">${esc(a)}</span>`).join('')}</div>
+                </div>` : ''}
+              ${missList.length ? `
+                <div class="field-row">
+                  <span class="field-label">💙 Things They'll Miss (${missList.length})</span>
+                  <div class="list-items">${missList.map(m=>`<div class="miss-item">${esc(m)}</div>`).join('')}</div>
+                </div>` : ''}
+              ${feedList.length ? `
+                <div class="field-row">
+                  <span class="field-label">📝 Honest Feedback (${feedList.length})</span>
+                  <div class="list-items">${feedList.map(f=>`<div class="feedback-item">${esc(f)}</div>`).join('')}</div>
+                </div>` : ''}
+              ${moment ? `
+                <div class="field-row">
+                  <span class="field-label">Most Vaibhav Moment</span>
+                  <div class="field-value">${esc(moment)}</div>
+                </div>` : ''}
+              ${farewell ? `
+                <div class="field-row">
+                  <span class="field-label">Full Message</span>
+                  <div class="full-msg">${esc(farewell)}</div>
+                </div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function row(label, value) {
+      return value
+        ? `<div class="field-row"><span class="field-label">${label}</span><span class="field-value">${esc(value)}</span></div>`
+        : '';
+    }
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
