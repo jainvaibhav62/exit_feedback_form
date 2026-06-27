@@ -7,6 +7,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmPSx-YGgbYOz-
 let currentStep = 1;
 const TOTAL_STEPS = 5;
 const formData = {};
+let _usedGenerator = false;
 
 // ══════════════════════════════════════════
 //  Navigation
@@ -17,24 +18,30 @@ function nextStep(from) {
   collectStepData(from);
 
   const next = from >= TOTAL_STEPS ? 'step-complete' : `step-${from + 1}`;
-  transition(`step-${from}`, next);
+  transition(`step-${from}`, next, 'forward');
 
   if (from < TOTAL_STEPS) currentStep = from + 1;
   updateProgress(currentStep);
+
+  triggerStepAchievement(from);
 }
 
 function prevStep(from) {
   collectStepData(from);
-  transition(`step-${from}`, `step-${from - 1}`);
+  transition(`step-${from}`, `step-${from - 1}`, 'backward');
   currentStep = from - 1;
   updateProgress(currentStep);
 }
 
-function transition(fromId, toId) {
+function transition(fromId, toId, direction = 'forward') {
   const fromEl = document.getElementById(fromId);
   const toEl   = document.getElementById(toId);
+  const cls    = direction === 'forward' ? 'slide-in-forward' : 'slide-in-backward';
+
   fromEl.classList.remove('active');
-  toEl.classList.add('active');
+  toEl.classList.add('active', cls);
+  toEl.addEventListener('animationend', () => toEl.classList.remove(cls), { once: true });
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -50,6 +57,77 @@ function updateProgress(step) {
     m.classList.toggle('active', i < step);
     m.classList.toggle('current', i === step - 1);
   });
+}
+
+// ══════════════════════════════════════════
+//  Achievement Toasts
+// ══════════════════════════════════════════
+
+const _toasted = new Set();
+
+function showToast(emoji, title, msg, key) {
+  if (key && _toasted.has(key)) return;
+  if (key) _toasted.add(key);
+
+  const el = document.createElement('div');
+  el.className = 'achievement-toast';
+  el.innerHTML = `<div class="toast-emoji">${emoji}</div><div><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div>`;
+  document.body.appendChild(el);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+
+  setTimeout(() => {
+    el.classList.remove('visible');
+    setTimeout(() => el.remove(), 500);
+  }, 4000);
+}
+
+function triggerStepAchievement(from) {
+  if (from === 1) {
+    setTimeout(() => showToast('🎖️', 'Witness Logged', 'Your identity is on the official record.', 'step1'), 400);
+  }
+}
+
+// ══════════════════════════════════════════
+//  Archetype Reveal
+// ══════════════════════════════════════════
+
+const ARCHETYPE_PROFILES = [
+  { min: 9, type: 'The Complete Legend 🌟', desc: 'Checked nearly everything. According to you, this man did it all. A myth.' },
+  { min: 7, type: 'The Indispensable One ⚡', desc: 'Nearly impossible to replace. His next team has no idea what\'s coming.' },
+  { min: 5, type: 'The Well-Rounded Teammate 🎯', desc: 'Multiple dimensions. Not just a colleague — a genuinely complete person.' },
+  { min: 3, type: 'The Focused Contributor 🔍', desc: 'You\'ve pinpointed exactly what made Vaibhav valuable. Specificity is respect.' },
+  { min: 1, type: 'First Impressions 🌱',       desc: 'Keep selecting to build the full picture...' },
+];
+
+function updateArchetypeReveal() {
+  const count   = document.querySelectorAll('input[name="archetypes"]:checked').length;
+  const el      = document.getElementById('archetype-reveal');
+  const typeEl  = document.getElementById('reveal-type');
+  const descEl  = document.getElementById('reveal-desc');
+  const labelEl = el.querySelector('.reveal-label');
+
+  if (count === 0) {
+    labelEl.textContent = 'Select traits above to unlock your reading...';
+    typeEl.textContent  = '';
+    descEl.textContent  = '';
+    return;
+  }
+
+  const profile = ARCHETYPE_PROFILES.find(p => count >= p.min);
+  labelEl.textContent = '✨ The Vaibhav you\'re describing is...';
+
+  if (typeEl.textContent !== profile.type) {
+    typeEl.style.animation = 'none';
+    typeEl.offsetHeight; // reflow
+    typeEl.style.animation = '';
+    typeEl.textContent = profile.type;
+  }
+  descEl.textContent = profile.desc;
+
+  if (count >= 7) {
+    showToast('🌟', 'Legend Unlocked', 'You\'ve described the whole man. A complete portrait.', 'archetype7');
+  }
 }
 
 // ══════════════════════════════════════════
@@ -252,6 +330,7 @@ Good luck. We'll be over here, lowering expectations back to sustainable levels.
 P.S. We're not actually lowering expectations. Your fault for raising them.`,
   };
 
+  _usedGenerator = true;
   const ta = document.getElementById('farewell_message');
   ta.value = templates[type];
   ta.classList.add('just-filled');
@@ -279,6 +358,10 @@ async function submitForm() {
 
   await new Promise(r => setTimeout(r, 900));
   showCompletion();
+
+  const rehire = parseInt(formData.rehire_score);
+  if (rehire === 10) setTimeout(() => showToast('🚀', 'Drag Him Back', 'A perfect 10. You\'d rehire immediately. We feel that.', 'rehire10'), 800);
+  if (formData.farewell_message && !_usedGenerator) setTimeout(() => showToast('✍️', 'Words from the Heart', 'You wrote this yourself. That means something.', 'handwritten'), 1600);
 }
 
 // ══════════════════════════════════════════
@@ -388,6 +471,10 @@ function launchConfetti() {
 // ══════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
+  const step1 = document.getElementById('step-1');
+  step1.classList.add('slide-in-forward');
+  step1.addEventListener('animationend', () => step1.classList.remove('slide-in-forward'), { once: true });
+
   updateProgress(1);
   initEmojiRating();
 
@@ -396,6 +483,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('input[name="will_miss"], input[name="wont_miss"]')
     .forEach(cb => cb.addEventListener('change', updateLedgerScore));
+
+  document.querySelectorAll('input[name="archetypes"]')
+    .forEach(cb => cb.addEventListener('change', updateArchetypeReveal));
 
   document.getElementById('relationship').addEventListener('change', function () {
     this.classList.remove('error');
